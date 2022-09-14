@@ -1,0 +1,290 @@
+<ion-header class="header-h2 page-header-tier-1">
+  <ion-toolbar class="md-header-title">
+    <div slot="start" class="subNav wrap" padding-bottom>
+      <div class="title">
+        <h1 class="origin amtrakBlue strong heading-text" [attr.aria-label]="headingText" >
+          {{ headingText }}</h1>
+      </div>
+    </div>
+    <ion-buttons slot="end">
+        <ion-button (click)="done()" type='button' class="done-button" slot="icon-only">
+            <ion-text class="done-text">{{appCopy.navigation.cancelButton}}</ion-text>
+          </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="lightGray">
+  <ion-item-group class="cc-form-group">
+    <form [formGroup]="creditCardForm" formTapFocus>
+      <ion-list class="credit-card-list">
+        <ion-item lines="inset" id="credit-card-number" class="credit-card-number"
+                  [ngClass]="{'error': !isCardEdit && !isCreditCardValid && creditCardForm.controls?.ccNumber.touched && (creditCardForm.controls?.ccNumber.value || creditCardFormSubmitted), 'showCardIcon': selectedCreditCard, 'placeholderText': modifyPlaceHolder}">
+          <ion-label class="bottom-left" position="floating" >{{ paymentsCopy.cardNumberLabel }}</ion-label>
+
+          <ion-input [disabled]="isCardEdit && !isAdhoc" 
+                      id="CreditCardNumberInputField" #ccNumber name="ccNumber"
+                      (ionChange)="creditCardNumberEntered()"
+                      (keyup.enter)="expiry.setFocus()" type="tel"
+                      clearOnEdit="false" 
+                      class="cc-number" 
+                      formControlName="ccNumber"
+                      (ionFocus)="ccFieldFocussed()" 
+                      [ngClass]="{'password-num-field':!viewPassword}"
+                      tabindex="0">
+          </ion-input>
+
+          <div class="card-image-container" slot="end">
+            <div>
+              <ion-img *ngIf="selectedCreditCard" [src]="selectedCreditCard.iconName" alt="selectedCreditCard.altText"
+                class="selected-card">
+              </ion-img>
+              <div [hidden]="isCardEdit && !isAdhoc">
+                <ion-img class="eyeIcon" src="assets/icon/hide.svg" tappable (click)="eyeIconClicked($event)" [ngClass]="{'hide-btn': viewPassword }" alt="Show credit card number icon"></ion-img>
+                <ion-img class="eyeIcon" src="assets/icon/show.svg" tappable (click)="eyeIconClicked($event)" [ngClass]="{'hide-btn': !viewPassword }" alt="Hide credit card number icon"></ion-img>  
+              </div>
+            </div>
+          </div>
+        </ion-item>
+        <div class="error-message"
+             *ngIf="!isCardEdit && !isCreditCardValid && creditCardForm.controls?.ccNumber.touched && (creditCardForm.controls?.ccNumber.value || creditCardFormSubmitted)">{{ paymentsCopy.invalidLabel }} {{ paymentsCopy.cardNumberLabel }}</div>
+
+        <!-- CVV SECTION ADDED-->
+        <ion-item lines="inset" class="expiry-date-item" [ngClass]="{'error': !creditCardForm.controls?.ccExpiration.valid && creditCardForm.controls?.ccExpiration.touched && (creditCardForm.controls?.ccExpiration.value || creditCardForm.controls?.ccExpiration.value.length === 0 || creditCardFormSubmitted), 'no-cvv-field': !showCvv, 'full-width': !isVisibleCvv}">
+          <ion-label class="bottom-left"  position="floating">{{ paymentsCopy.expirationLabel }}</ion-label>
+          <ion-input id="ExpiryDateInputField" #expiry name="expirationDate" (keyup.enter)="expiryEnter(); nameField.setFocus()" (ionChange)="onExpiryKeypress($event); (isCardEdit && (creditCardForm.controls?.ccCvv.value && creditCardForm.controls?.ccCvv.value.length === 7))  ? '' : ''" type="tel" maxlength="7" formControlName="ccExpiration" (ionBlur)="expirationBlurred()" tabindex="0"></ion-input>
+        </ion-item>
+
+        <div>
+          <ion-item lines="inset" class="cvv-section" *ngIf="showCvv && isVisibleCvv" [ngClass]="{'error': !isCvvValid && creditCardForm.controls?.ccCvv.touched && (creditCardForm.controls?.ccCvv.value || creditCardFormSubmitted)}">
+            <ion-label class="bottom-left" position="floating">
+              {{ paymentsCopy.cvvLabel }}
+            </ion-label>
+            <ion-input #cvv id="CVVNumberInputFieldMasked" name="cvvNumber" type="tel" [ngClass]="{'password-num-field':!viewCvv}" clearOnEdit="{{clearCvvOnEdit}}" class="cc-cvv" formControlName="ccCvv" (ionFocus)="cvvFieldFocussed()" (ionChange)="onCvvEnter($event)" tabindex="0"></ion-input>
+            <div class="card-image-container" slot="end">
+              <div [ngClass]="{'cvv-eye-icon': isCardEdit}" (click)="showCVVInfo($event)">
+                <ion-img tappable tabindex="0" class="information-circle" src="assets/icon/navigation/navigation_amtrak.svg" alt="Information Icon"></ion-img>
+              </div>
+              <div (click)="eyeIconClickedCvv($event)" [hidden]="!isCardEdit || isAdhoc">
+                <ion-img src="assets/icon/hide.svg" tappable  [ngClass]="{'hide-btn': viewCvv }" alt="Show credit card number icon"></ion-img>
+                <ion-img src="assets/icon/show.svg" tappable  [ngClass]="{'hide-btn': !viewCvv }" alt="Hide credit card number icon"></ion-img>
+            </div>  
+            </div>
+          </ion-item>
+          </div>
+
+        <!-- Show below error div only if there is an error in either the expiration or cvv fields. Done as the error messages are
+        shown/hidden using the 'visibility' css property to maintain alignment of error message below the respective field -->
+        <div class="error-div expiration-err-div" [ngClass]="{'expiration-error-show':!creditCardForm.controls?.ccExpiration.valid && creditCardForm.controls?.ccExpiration.touched && (creditCardForm.controls?.ccExpiration.value || creditCardForm.controls?.ccExpiration.value.length === 0 || creditCardFormSubmitted), 'ccv-error-shown': !isCvvValid && creditCardForm.controls?.ccCvv.touched && (creditCardForm.controls?.ccCvv.value || creditCardFormSubmitted)}">
+          <div class="error-message expirationErr" 
+            *ngIf="!creditCardForm.controls?.ccExpiration.valid && creditCardForm.controls?.ccExpiration.touched && (creditCardForm.controls?.ccExpiration.value || creditCardForm.controls?.ccExpiration.value.length === 0 || creditCardFormSubmitted)" 
+            [ngClass]="{'showError': !creditCardForm.controls?.ccExpiration.valid && creditCardForm.controls?.ccExpiration.touched && (creditCardForm.controls?.ccExpiration.value || creditCardForm.controls?.ccExpiration.value.length === 0 || creditCardFormSubmitted)}">
+              {{ paymentsCopy.invalidLabel }} {{ paymentsCopy.expirationLabel }}
+          </div>
+          <div class="error-message cvvErr" 
+            *ngIf="(isVisibleCvv && !isCvvValid && creditCardForm.controls?.ccCvv.touched && (creditCardForm.controls?.ccCvv.value || creditCardFormSubmitted))" 
+            [hidden]="!showCvv" 
+            [ngClass]="{'showError': !isCvvValid && creditCardForm.controls?.ccCvv.touched  && (creditCardForm.controls?.ccCvv.value || creditCardFormSubmitted)}">
+              {{ paymentsCopy.invalidLabel }} {{ paymentsCopy.cvvLabel }}
+          </div>
+        </div>
+        <!-- CVV SECTION ENDED -->
+
+        <!-- Credit Card Name -->
+        <ion-item lines="inset"
+          [ngClass]="{'error': !creditCardForm.controls?.ccName.valid && creditCardForm.controls?.ccName.touched && (creditCardForm.controls?.ccName.value.length === 0 || creditCardForm.controls?.ccName.value || creditCardFormSubmitted)}">
+          <ion-label class="bottom-left"  position="floating">{{ paymentsCopy.nameLabel }}</ion-label>
+          
+          <ion-input id="CreditCardNameInputField" #nameField (keyup.enter)="address1.setFocus()" type="text" 
+                      [disabled]="isCardEdit && !isAdhoc"
+                      formControlName="ccName" tabindex="0" autocorrect="off" 
+                      autocapitalize="words"
+                      spellcheck="false" (ionChange)="nameEntered()"></ion-input>
+
+        </ion-item>
+
+        <div class="error-message"
+             *ngIf="!creditCardForm.controls?.ccName.valid && creditCardForm.controls?.ccName.touched && (creditCardForm.controls?.ccName.value.length === 0 || creditCardForm.controls?.ccName.value || creditCardFormSubmitted)">{{ paymentsCopy.invalidLabel }} {{ paymentsCopy.nameLabel }}</div>
+        <!-- END Credit Card Name -->
+
+        <!-- <ion-item lines="none" class="billingInfoHeader">
+          {{appCopy.personalInformationPage.billingAddressLabel}}
+        </ion-item> -->
+
+        <ion-item lines="inset" [ngClass]="{'error': !creditCardForm.controls?.ccBillingAdd1.valid && creditCardForm.controls?.ccBillingAdd1.touched
+        && (creditCardForm.controls?.ccBillingAdd1.value.length === 0 || creditCardForm.controls?.ccBillingAdd1.value || creditCardFormSubmitted)}">
+          <ion-label class="bottom-left" position="floating">{{ paymentsCopy.address1Label }}</ion-label>
+          <ion-input id="BillingAddressLine1InputField" #address1 name="billingAddress1" (keyup.enter)="address2.setFocus()" type="text"
+                      [disabled]="isCardEdit && !isAdhoc"
+                      formControlName="ccBillingAdd1"
+                      tabindex="0" autocorrect="off" autocapitalize="words"
+                      spellcheck="false" (ionChange)="billingAddress1Entered()"></ion-input>
+        </ion-item>
+        <div class="error-message" *ngIf="!creditCardForm.controls?.ccBillingAdd1.valid && creditCardForm.controls?.ccBillingAdd1.touched
+        && (creditCardForm.controls?.ccBillingAdd1.value.length === 0 || creditCardForm.controls?.ccBillingAdd1.value || creditCardFormSubmitted)">{{ paymentsCopy.invalidLabel }}
+          {{ paymentsCopy.address1Label }}</div>
+
+        <ion-item lines="inset" [ngClass]="{'error': !creditCardForm.controls?.ccBillingAdd2.valid && creditCardForm.controls?.ccBillingAdd2.touched
+        && (creditCardForm.controls?.ccBillingAdd2.value || creditCardFormSubmitted)}">
+          <ion-label class="bottom-left" position="floating">{{ paymentsCopy.address2Label }}</ion-label>
+          <ion-input id="BillingAddressLine2InputField" #address2 name="billingAddress2" (keyup.enter)="city.setFocus()" type="text"
+                      [disabled]="isCardEdit && !isAdhoc"
+                      formControlName="ccBillingAdd2"
+                      tabindex="0" autocorrect="off"
+                      spellcheck="false" (ionChange)="billingAdd2Entered()"></ion-input>
+        </ion-item>
+        <div class="error-message" *ngIf="!creditCardForm.controls?.ccBillingAdd2.valid && creditCardForm.controls?.ccBillingAdd2.touched
+          && (creditCardForm.controls?.ccBillingAdd2.value || creditCardFormSubmitted)">
+          {{ paymentsCopy.invalidLabel }} {{ paymentsCopy.address2Label }}
+        </div>
+
+          <div class="city">
+            <ion-item lines="inset" class="city-section" [ngClass]="{'error': !creditCardForm.controls?.ccCity.valid && creditCardForm.controls?.ccCity.touched
+            && (creditCardForm.controls?.ccCity.value.length === 0 || creditCardForm.controls?.ccCity.value || creditCardFormSubmitted), 'showState': showState}">
+              <ion-label class="bottom-left" position="floating">{{ paymentsCopy.cityLabel }}</ion-label>
+              <ion-input id="CreditCardCityInputField" #city name="ccCity"
+                          [disabled]="isCardEdit && !isAdhoc"
+                          type="text"
+                          formControlName="ccCity" 
+                          autocapitalize="words"
+                          tabindex="0" autocorrect="off" spellcheck="false" (ionChange)="cityEntered()"></ion-input>
+            </ion-item>
+          </div>
+          <div class="cityErr">
+            <div class="error-message"
+                *ngIf="(!creditCardForm.controls?.ccCity.valid && creditCardForm.controls?.ccCity.touched && (creditCardForm.controls?.ccCity.value.length === 0 || creditCardForm.controls?.ccCity.value || creditCardFormSubmitted))"
+                [ngClass]="{'showError': !creditCardForm.controls?.ccCity.valid && creditCardForm.controls?.ccCity.touched && (creditCardForm.controls?.ccCity.value.length === 0 || creditCardForm.controls?.ccCity.value || creditCardFormSubmitted), 'zipErrorShown':!creditCardForm.controls?.ccZipCode.valid && creditCardForm.controls?.ccZipCode.touched && (creditCardForm.controls?.ccZipCode.value || creditCardFormSubmitted)}">{{ paymentsCopy.invalidLabel }} {{paymentsCopy.cityLabel }}</div>
+          </div>
+
+          <!-- State -->
+          <div class="state-zip">
+            <ion-item *ngIf="showState" class="state-section ion-padding-start">
+                <ion-label class="bottom-left"
+                      attr.aria-label="{{creditCard.stateName}} selected. Select to change {{stateProvinceLabel}}"
+                      class="state ada" [ngClass]="{'hideLabel': !showState}" position="floating">{{stateProvinceLabel}}
+                </ion-label>
+                  <ion-input role="button" readonly id="CreditCardStateInputField"
+                              [disabled]="isCardEdit && !isAdhoc"
+                              attr.aria-label="{{creditCard.stateName}} selected. Select to change {{stateProvinceLabel}}"
+                              class="state-select-field"
+                              (click)="stateSelected('state')" value="{{ creditCardForm.controls?.ccState.value }}">
+                          <!-- <ion-text slot="start">{{ creditCardForm.controls?.ccState.value }}</ion-text> -->
+                  </ion-input>
+                  <!-- <ion-img slot="end" src="/assets/icon/select.svg"></ion-img> -->
+            </ion-item>
+            <ion-item lines="inset" *ngIf="showZipCode" [hidden]="!showZipCode" class="ion-padding-start zip-section"
+                    [ngClass]="{'error': !creditCardForm.controls?.ccZipCode.valid && creditCardForm.controls?.ccZipCode.touched  && (creditCardForm.controls?.ccZipCode.value || creditCardFormSubmitted), 'showState': showState}">
+              <ion-label class="bottom-left" position="floating" stacked>{{ paymentsCopy.zipCodeLabelRequired }}</ion-label>
+              <ion-input id="CreditCardZipCodeInputField" #zipCodeField name="zipCode" maxLength="10" type="tel"
+                          [disabled]="isCardEdit && !isAdhoc"                          
+                          formControlName="ccZipCode"
+                          tabindex="0">
+                </ion-input>
+            </ion-item>
+            <ion-item lines="inset" *ngIf="!showZipCode" [hidden]="showZipCode" class="zip-section" item-right
+            [ngClass]="{'error': !creditCardForm.controls?.ccZipCode.valid
+                    && creditCardForm.controls?.ccZipCode.touched  && (creditCardForm.controls?.ccZipCode.value.length === 0 || creditCardForm.controls?.ccZipCode.value || creditCardFormSubmitted), 'showState': showState}">
+              <ion-label class="bottom-left" position="floating" stacked>{{ paymentsCopy.zipCodeLabelRequired }}</ion-label>
+              <ion-input id="CreditCardZipCodeInputField" #zipCode name="ccZipCode"
+                          [disabled]="isCardEdit && !isAdhoc"
+                          (keydown.enter)="formSubmitted()" type="text" formControlName="ccZipCode"
+                          tabindex="0" autocorrect="off" spellcheck="false">
+                </ion-input>
+            </ion-item>
+          </div>
+
+          <div class="error-div city-err-div ion-padding-start">
+            <div class="err-align-div"></div>
+            <div class="error-message zipErr"
+                  *ngIf="(!creditCardForm.controls?.ccZipCode.valid && creditCardForm.controls?.ccZipCode.touched && (creditCardForm.controls?.ccZipCode.value.length === 0 || creditCardForm.controls?.ccZipCode.value || creditCardFormSubmitted))"
+                  [ngClass]="{'showError': !creditCardForm.controls?.ccZipCode.valid && creditCardForm.controls?.ccZipCode.touched && (creditCardForm.controls?.ccZipCode.value.length === 0 || creditCardForm.controls?.ccZipCode.value || creditCardFormSubmitted), 'align-left': !showState}">{{ paymentsCopy.invalidLabel }} {{zipPostalLabel}}
+            </div>
+          </div>
+
+        <!-- Country -->
+        <ion-item id="country" lines="inset" class="country-item" *ngIf="showCountry">
+            <ion-label class="country"
+                       attr.aria-label="{{creditCard.countryName}} selected. Select to change {{paymentsCopy.countryLabel}}"
+                        position="floating">{{ paymentsCopy.countryLabel }}</ion-label>
+          <ion-input id="CreditCardCountryInputField"
+            attr.aria-label="{{creditCard.countryName}} selected. Select to change {{paymentsCopy.countryLabel}}"
+            class="country-select-field"
+            readonly
+            (click)="stateSelected('country')"
+            value="{{creditCard.countryName}}">
+          </ion-input>
+          <ion-img slot="end" src="assets/icon/select.svg" class="select-icon"></ion-img>
+        </ion-item>
+
+        <!-- *************************** -->
+        <!-- New Save Credit Card -->  
+        <div id="save-profile-payments"
+          *ngIf="showSaveToProfile">
+
+          <!-- Nickname -->
+          <ion-item id="nickname" lines="inset" *ngIf="isUserLoggedIn">
+            <ion-label class="bottom-left" position="floating">{{ appCopy.creditCard.cardNicknamePlaceHolderText }}</ion-label>
+            <ion-input id="CreditCardNickNameInputField" formControlName="ccCardNickName" name="cardNickname" type="text" maxlength="30"></ion-input>
+          </ion-item>
+        
+          <ion-item *ngIf="(!isCardEdit || (isCardEdit && isAdhoc)) && (savedCreditCards && savedCreditCards.length < 3)" class="tos amtrakBlue" padding-left padding-vertical text-wrap lines="none">
+            <ion-label class="save-checkbox amtrakBlue save-profile-para1">
+                {{appCopy.creditCard.saveCreditCardToMyProfile}}
+            </ion-label>
+            <ion-checkbox slot="start" class="checkbox-square" [(ngModel)]="saveToProfile"
+                attr.aria-checked={{appCopy.creditCard.saveCreditCardToMyProfile}} item-right
+                (click)="setStoredCardIndicator()" tappable mode="md">
+            </ion-checkbox>
+          </ion-item>
+          <!-- END: New Save Credit Card -->
+
+          <div id="tnc-payments" class="save-credit-card">
+            <ion-item class="tos amtrakBlue" padding-left padding-vertical text-wrap lines="none">
+                <ion-label class="save-profile-para2" 
+                  [ngClass]="{'isAdd': !isEdit, 'isEdit': isEdit}">
+                  {{tncText}}
+                  <a (click)="viewWalletTermsAndConditions()"
+                      [innerHtml]="appCopy.creditCard.walletTermsAndConditionsLinkText"
+                      class="terms-conditions-link" id="terms-conditions-link" tappable>
+                  </a>
+                </ion-label>
+            </ion-item>
+          </div>
+        </div>
+        <!-- END: New Save Credit Card -->  
+        <!-- *************************** -->
+
+      </ion-list>
+
+      <ion-list class="add-edit-delete-btns" [ngClass]="{'isAddAGR': (!isEdit && (showSaveToProfile))}">
+        <!-- *************************** -->
+        <!-- Add / Edit / Delete Buttons -->
+        <div class="addeditbutton">
+          <ion-grid class="btnGrid">
+            <ion-row>
+                <ion-col id="delete-cc-payments" *ngIf="isCardEdit">
+                  <ion-button expand="block" aria-required="true" role="button" fill="clear" 
+                      attr.aria-label="{{ariaLabels.addCreditCard}}" fill="clear"
+                      outline ion-button item-right tappable class="tripDetailsButton deleteButton" (click)="removeCreditCard()">
+                      {{ appCopy.navigation.deleteButton }}
+                  </ion-button>
+                </ion-col>
+
+                <ion-col id="add-cc-payments">
+                  <ion-button expand="block" aria-required="true" role="button" 
+                      attr.aria-label="{{ariaLabels.addCreditCard}}" fill="clear"
+                      [disabled]="!creditCardForm.controls?.ccNumber.value || !creditCardForm.controls?.ccExpiration.valid || !isCvvValid || !creditCardForm.controls?.ccName.valid || !creditCardForm.controls?.ccBillingAdd1.valid || !creditCardForm.controls?.ccCity.valid || !creditCardForm.controls?.ccZipCode.valid"
+                      [ngClass]="{'disabled-add': !isCreditCardValid || !isNameValid || !isCvvValid || !isExpiryValid || !creditCardForm.controls?.ccBillingAdd1.value || !creditCardForm.controls?.ccCity.value || !creditCardForm.controls?.ccZipCode.valid}"
+                      outline ion-button item-right tappable class="tripDetailsButton saveButton" [ngClass]="{'isAdd': !isEdit, 'isEdit': isEdit}" (click)="updateCreditCard()">
+                      {{ btnTextAddSave }}
+                  </ion-button>
+                </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+        <!-- END Add / Edit Buttons -->
+        <!-- *************************** -->
+      </ion-list>
+    </form>
+  </ion-item-group>
+</ion-content>

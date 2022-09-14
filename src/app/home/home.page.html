@@ -1,20 +1,6 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- <app-add-edit-adhoc-credit-card></app-add-edit-adhoc-credit-card> -->
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<div style="width:300px">
+    <ion-img class="eyeIcon" src="assets/beer-outline.svg" tappable (click)="eyeIconClicked($event)" [ngClass]="{'hide-btn': viewPassword }" alt="Show credit card number icon"></ion-img>
+    <ion-img class="eyeIcon" src="assets/wine-outline.svg" tappable (click)="eyeIconClicked($event)" [ngClass]="{'hide-btn': !viewPassword }" alt="Hide credit card number icon"></ion-img>  
   </div>
-</ion-content>

@@ -1,0 +1,561 @@
+@-webkit-keyframes back-button-anim {
+    from {
+      opacity: 0;
+      left: 50px;
+    }
+    to {
+      opacity: 1;
+      left: 0px;
+    }
+  }
+
+  .header-h2 {
+    background: white;
+    min-height: 7.4rem;
+    border-bottom: 1px solid #d4d8d9;
+  
+    ion-toolbar {
+      --background: transparent;
+      -webkit-animation-name: back-button-anim;
+      -webkit-animation-duration: 1s;
+      animation-name: back-button-anim;
+      animation-duration: 1s;
+      --border-width: 0 !important;
+    }
+  }
+  .cvv-eye-icon {
+    padding-right: 15px
+  }
+  .hide-btn { 
+    display: none;
+  }
+  
+  ion-content {
+    --background: white;
+    outline: none;
+    &.md {
+      --city-flex: 1.3;
+      --state-flex: 0.7;
+    }
+    &.ios {
+      --city-flex: 1.4;
+      --state-flex: 0.8;
+    }
+    ion-item {
+      --highlight-background: none;
+      outline: none;
+      .card-image-container {
+        display: flex;
+        position: absolute;
+        right: 0;
+        bottom: 0 !important;
+        .selected-card {
+          width: 2.8rem;
+          height: 2.8rem;
+          padding-right: 3px;
+        }
+        .eyeIcon {
+          padding-right: 5px;
+        }
+      }
+    }
+    ion-item.tos {
+      --background: transparent;
+    }
+
+    ion-label {
+      --color: var(--ada) !important;
+      padding-bottom: 10px;
+
+      &.save-checkbox {
+        padding-bottom: 0px !important;
+      }
+    }
+
+    .terms-conditions-link {
+      color: var(--darkBlue);
+      text-decoration: underline;
+    }
+
+    .default-checkbox-label {
+      margin-left: 1rem;
+      padding-bottom: 0;
+    }
+    .mini-height {
+      min-height: 0rem !important;
+    }
+    .mini-height .error-message {
+      padding-left: 0rem;
+    }
+
+    .full-width {
+      width: 100% !important;
+    }
+
+    .sc-ion-label-md-h {
+      font-size: 1.2rem;
+    }
+
+    .sc-ion-label-ios-h {
+      font-size: 1.2rem;
+    }
+
+    .city {
+      display: flex;
+      padding-bottom: 3px;
+
+      ion-item {
+        --highlight-background: none;
+      }
+
+      .city-section {
+        flex: var(--city-flex);
+      }
+    }
+
+    .state-zip {
+      display: flex;
+      padding-bottom: 3px;
+
+      ion-item {
+        --highlight-background: none;
+      }
+
+      .state-section {
+        flex: var(--state-flex);
+        --padding-start: 0;
+        .state-select-field {
+          background: url("/assets/icon/select.svg");
+          background-repeat: no-repeat;
+          background-position: 100% 48%;
+          background-size: 16px;
+        }
+      }
+      .zip-section {
+        flex: 1;
+        display: inline-block;
+        vertical-align: top;
+        &.showState {
+          width: 34%;
+        }
+      }
+    }
+
+    .city-err-div {
+      display: flex;
+
+      .cityErr {
+        flex: var(--city-flex);
+      }
+
+      .err-align-div {
+        flex: var(--state-flex);
+      }
+
+      .zipErr {
+        flex: 1;
+        text-align: end;
+        padding-right: 5px;
+      }
+    }
+
+    .cc-form-group {
+      background: var(--white);
+      padding-bottom: 11rem;
+  
+      ion-input {
+        overflow: hidden;
+      }
+      .credit-card-number {
+        .text-input-ios {
+          font-family: initial;
+        }
+      }
+    }
+    .cc-logo-group {
+      background: var(--lightGray);
+      min-height: 5.1rem;
+      .cc-logo-divider {
+        background: var(--lightGray);
+        border: 0;
+        ion-label {
+          margin: 0;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .logo-icon {
+            width: 2.5rem;
+            height: auto;
+            margin-left: 0.75rem;
+            &:first-child {
+              margin-left: 0;
+            }
+          }
+        }
+      }
+    }
+    .other-country-group {
+      .item-divider {
+        ion-label {
+          margin-top: 2.5rem;
+          margin-bottom: 2.5rem;
+        }
+      }
+      .help-label {
+        margin: 0;
+      }
+    }
+
+    .credit-card-list {
+      position: relative;
+      margin-bottom: 0;
+    }
+    .expiry-date-item {
+      width: 50%;
+      float: left;
+
+      &.no-cvv-field {
+        width: 100%;
+        float: none;
+      }
+    }
+    .cvv-section {
+      width: 50%;
+
+      .text-input-ios {
+        font-family: initial;
+      }
+    }
+    .expirationErr {
+      width: 100%;
+    }
+
+    .ccv-error-shown {
+      .expirationErr {
+        width: 50%;
+        float: left;
+      }
+    }
+    .cvvErr.error-message {
+      width: 100%;
+      display: block;
+      padding-left: 55%;
+    }
+    .expiration-error-show {
+      .cvvErr.error-message {
+        width: 50%;
+        display: inline-block;
+        padding-left: 1.6rem;
+      }
+    }
+    .city-section {
+      width: 50%;
+      float: left;
+      &.showState {
+        width: 45%;
+      }
+    }
+    .country-item {
+      .country {
+        color: var(--ada);
+      }
+      .country-select-field {
+        padding: 0 2.5rem 0.5rem 0;
+        width: 100%;
+        height: auto;
+        font-size: var(--font-form-input);
+        margin: 1.2rem 0 0 0;
+        color: var(--darkBlue);
+        border-radius: 0;
+        border-bottom: var(--standard-border);
+        box-shadow: none;
+        font-weight: normal;
+        text-align: left;
+      }
+      ion-img {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding-bottom: 5px;
+      }
+    }
+    .error-message {
+      padding-left: 1.6rem;
+    }
+
+    .ccInfoHeader {
+      text-transform: capitalize;
+      background: #e6e9eb;
+      color: #3474e1;
+      padding: 2.1rem 0 0.9rem 1.7rem;
+      font-size: 1.6rem;
+      border-bottom: 8px solid white;
+      margin-top: 0;
+    }
+    ion-item.billingInfoHeader {
+      text-transform: capitalize;
+      --background: var(--lightGray);
+      --color: #3474e1;
+      font-size: 1.4rem;
+    }
+
+    ion-button.addButton {
+      font-size: 1.4rem;
+      --border: 1px solid #999;
+      --border-radius: 3px;
+      outline: none;
+      --background: var(--ctaGreen);
+    }
+
+    .item.item-md .checkbox-md {
+      position: static;
+      display: block;
+      margin: 9px 13px 9px 4px;
+    }
+    .make-default {
+      color: var(--hoffmanBlue);
+    }
+    ion-button.addButtonGray {
+      --background: var(--adaGray);
+      --color: white;
+      margin-left: 55%;
+      text-align: center;
+      width: 45%;
+      text-transform: capitalize;
+      --border-radius: 3px;
+      height: 4rem !important;
+      font-size: 1.3rem !important;
+    }
+    ion-button.addButton {
+      --background: var(--buttonBlue);
+      --color: white;
+      margin-left: 55%;
+      text-align: center;
+      width: 45%;
+      text-transform: capitalize;
+      --border-radius: 3px;
+      height: 4rem !important;
+      font-size: 1.3rem !important;
+    }
+    ion-button.saveButtonGray {
+      --color: white;
+      margin-left: 4px;
+      text-align: center;
+      width: 96%;
+      text-transform: capitalize;
+      --border-radius: 3px;
+      height: 4rem !important;
+      font-size: 1.3rem !important;
+
+      &.isDisabled {
+        --background: var(--adaGray);
+      }
+      &.isEnabled {
+        --background: var(--buttonBlue);
+      }
+    }
+
+    ion-button.deleteButton {
+      box-sizing: border-box;
+      border: 0.91px solid #167FA6;
+      border-radius: 2.28px;
+      background-color: #FFFFFF;
+      margin-left: 5px;
+      color: #167FA6;
+      width: 90%;
+      text-transform: capitalize;
+      --border-radius: 3px;
+      height: 4rem !important;
+      font-size: 1.3rem !important;
+    }
+  }
+  .alert-wrapper {
+    border-radius: 1rem;
+
+    .alert-head {
+      border-bottom: 1px solid #dedede;
+
+      h3 {
+        text-align: center;
+      }
+    }
+
+    .alert-button-group {
+      padding: 0;
+
+      .alert-button {
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: #387ef5;
+        background-color: transparent;
+        margin: 0;
+        padding: 1rem 5.7rem 1rem 0;
+        width: 49%;
+        border-right: 1px solid #dedede;
+        background: white;
+      }
+    }
+  }
+  ion-list.credit-card-list{
+    margin-right: 1.5rem;
+  }
+  ion-item{
+    --min-height:68px;
+    --border-color: 1rem solid #737575;
+  }
+  ion-input input{
+    padding-bottom: 0px;
+  }
+  ion-label.bottom-left {
+    position: absolute;
+    left: 0;
+    z-index: 0;
+    &.md {
+      bottom: 1.5rem;
+      height: 5rem;
+    }
+    &.ios {
+      bottom: -0.5rem;
+      height: 5rem;
+    }
+  }
+  ion-input {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+
+  ion-input#CreditCardNumberInputField {
+    width: 75%;
+  }
+
+  ion-input#VisibleCreditCardNumberInputField {
+    width: 75%;
+  }
+
+  .done-icon {
+    color: black;
+  }
+
+  .done-text {
+    color: var(--amtrakBlue);
+    font-size: var(--font-size-h1-ios);
+    font-weight: 300;
+    text-transform: initial !important;
+  }
+
+  :host .done-button{
+    color: var(--amtrakBlue);
+  }
+
+  .save-profile-para2 {
+    white-space: normal;
+
+    &.isAdd {
+      margin-top: -34px;
+    }
+    &.isEdit {
+      margin-top: 0px;
+    }
+  }
+
+  ion-list.add-edit-delete-btns {
+    margin-top: 0px;
+
+    &.isAddAGR {
+      margin-top: -40px;
+    }
+    &.isEditAGR {
+      margin-top: -20px;
+    }
+  }
+
+  .tripDetailsButton {
+    height: 4rem !important;
+    position: relative;
+    top: 0.6rem;
+    color: #fff;
+    font-size: 1.3rem !important;
+    text-transform: capitalize;
+    border-radius: 3px;
+    --border-radius: 3px;
+  }
+  
+  .deleteButton{
+    background-color: #FFFFFF;
+    border: 0.91px solid #167FA6;
+    color: #167FA6 !important;
+  }
+
+  .saveButton{
+    background-color: #167fa6;
+    --background: var(--buttonBlue);
+    --color: white;
+  }
+
+  button.more-info-icon-button {
+    background-color: unset;
+    position: relative;
+    top: 1.7rem;
+    margin-left: 22px;
+  }
+
+  ion-icon.info-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .information-circle {
+    background: no-repeat 50% 50%;
+    margin-right: 0.5rem;
+    position: relative;
+    margin-left: 8px;
+    max-width: 20px;
+  }
+  
+  .card-image-container {
+    position: absolute;
+    margin-right: 0 !important;
+    bottom: -0.6rem !important;
+    z-index: 1000;
+    height: 100%;
+    align-items: flex-end;
+  }
+
+  ion-col.add-cc-payments {
+    margin-right: -5px;
+  }
+
+  ion-grid.btnGrid {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    
+    ion-row {
+      display: flex;
+      align-items: center;
+    }
+
+    ion-col {
+
+      display: flex;
+      justify-content: center;
+
+      ion-button {
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-top: 0;
+
+        &.saveButton {
+          width: 96% !important;
+        }
+      }
+    }
+  }

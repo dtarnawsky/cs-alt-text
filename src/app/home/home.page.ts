@@ -6,7 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
+  isCardEdit = true;
+  isAdhoc = false;
+  viewPassword = true;
   constructor() {}
-
+  eyeIconClicked(event) {
+    this.viewPassword = !this.viewPassword;
+  }
 }
